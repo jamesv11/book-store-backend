@@ -12,6 +12,8 @@ namespace Aplicacion.Http.Input
         public string Author { get; set; }
         public string Publisher { get; set; }
         public string Genre { get; set; }
-        public string Price { get; set; }
+        public double Price { get; set; }
+
+        public string EmailUsuario { get; set; }
     }
 }

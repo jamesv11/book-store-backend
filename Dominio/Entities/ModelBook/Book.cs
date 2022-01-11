@@ -16,6 +16,6 @@ namespace Dominio.Entities.ModelBook
         public string Genre { get; set; }
         public double Price { get; set; }
 
-        public User user { get; set; }
+        public User User { get; set; }
     }
 }

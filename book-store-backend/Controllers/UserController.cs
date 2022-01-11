@@ -31,22 +31,10 @@ namespace book_store_backend.Controllers
 
         public async Task<ActionResult<dynamic>> Create([FromBody] UserInput request)
         {
-            var respuesta = await _serviceUser.Create(request);
-            return GetResponse(respuesta);
+            var response = await _serviceUser.Create(request);
+            return StatusCode((int)response.Code, response);
         }
 
-        private ActionResult<dynamic> GetResponse(Response<UserOutput> response)
-        {
-            if (!response.Error)
-            {
-                return StatusCode((int)response.Code, response.Data);
-            }
-
-            var mensaje = new
-            {
-                Message = response.Message
-            };
-            return StatusCode((int)response.Code, mensaje);
-        }
+       
     }
 }
