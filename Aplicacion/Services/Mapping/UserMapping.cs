@@ -15,7 +15,7 @@ namespace Aplicacion.Services.Mapping
         public UserMapping()
         {
             CreateMap<UserInput, User>();
-            CreateMap<UserMapping, UserOutput>();
+            CreateMap<User, UserOutput>();
         }
     }
 }
