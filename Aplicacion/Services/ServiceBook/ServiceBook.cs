@@ -37,7 +37,7 @@ namespace Aplicacion.Services.ServiceBook
             {
                 UnitOfWork.RollBack();
                 return Response<BookOutput>.CreateFailResponse(e, HttpStatusCode.BadRequest,
-                   "Ha sucedido un error al crear la actividad");
+                   "Ha sucedido un error al crear el libro");
             }
         }
 
@@ -51,7 +51,7 @@ namespace Aplicacion.Services.ServiceBook
             {
                 UnitOfWork.RollBack();
                 return Response<BookOutput>.CreateFailResponse(e, HttpStatusCode.BadRequest,
-                   "Ha sucedido un error al crear la actividad");
+                   "Ha sucedido un error al crear el libro");
             }
         }
 
@@ -71,6 +71,7 @@ namespace Aplicacion.Services.ServiceBook
 
             var book = new Book
             {
+                
                 Author = bookInput.Author,
                 Title = bookInput.Title,
                 Genre = bookInput.Genre,
@@ -82,8 +83,10 @@ namespace Aplicacion.Services.ServiceBook
             await _repositoryBook.Agregar(book);
             var bookOutput = Mapper.Map<BookOutput>(book);
             return Response<BookOutput>.CreateSuccessResponse(bookOutput, HttpStatusCode.OK,
-                "Actividad creada con exito");
+                "Libro creado con exito");
         }
+
+
 
         private async Task<Response<BookOutput>> DoDeleteBook(Guid id)
         {
@@ -103,7 +106,7 @@ namespace Aplicacion.Services.ServiceBook
             await _repositoryBook.Remover(bookFound);
             var bookOutput  = Mapper.Map<BookOutput>(bookFound);
             return Response<BookOutput>.CreateSuccessResponse(bookOutput, HttpStatusCode.OK,
-                "Activiad eliminada con exito");
+                "Libro eliminada con exito");
         }
         private async Task<bool> ValidateExistsUser(string email)
         {
@@ -122,7 +125,7 @@ namespace Aplicacion.Services.ServiceBook
             {
                 UnitOfWork.RollBack();
                 return Response<List<BookOutput>>.CreateFailResponse(e, HttpStatusCode.BadRequest,
-                   "Ha sucedido un error al consultar actividades");
+                   "Ha sucedido un error al consultar los libros");
             }
         }
 
@@ -135,7 +138,48 @@ namespace Aplicacion.Services.ServiceBook
 
             var booksOutput = Mapper.Map<List<BookOutput>>(booksFound);
             return Response<List<BookOutput>>.CreateSuccessResponse(booksOutput, HttpStatusCode.OK,
-                "Estado actividad actualizado con exito");
+                "Libros consultados con exito.");
+        }
+
+        public async Task<Response<BookOutput>> UpdateBook(BookInput bookInput, Guid id)
+        {
+            try
+            {
+                return await DoUpdateBook(bookInput, id);
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollBack();
+                return Response<BookOutput>.CreateFailResponse(e, HttpStatusCode.BadRequest,
+                   "Ha sucedido un error al actualizar el libro.");
+            }
+        }
+
+        private async Task<Response<BookOutput>> DoUpdateBook(BookInput book, Guid id)
+        {
+
+            var bookExists = (await _repositoryBook.ExisteRegistro(u =>
+                u.Id.Equals(id)));
+
+
+            if (!bookExists)
+                return Response<BookOutput>.CreateResponse(true);
+
+            var bookFound = (await _repositoryBook.ObtenerPor(u =>
+                 u.Id.Equals(id))).First();
+
+
+            bookFound.Genre = book.Genre;
+            bookFound.Author = book.Author;
+            bookFound.Price = book.Price;
+            bookFound.Publisher = book.Publisher;
+            bookFound.Title = book.Title;
+           
+
+            await _repositoryBook.Editar(bookFound);
+            var bookOutput = Mapper.Map<BookOutput>(bookFound);
+            return Response<BookOutput>.CreateSuccessResponse(bookOutput, HttpStatusCode.OK,
+                "Libro actualizado con exito.");
         }
 
 

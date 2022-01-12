@@ -32,6 +32,14 @@ namespace book_store_backend.Controllers
             return StatusCode((int)response.Code, response);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<dynamic>> Update([FromBody] BookInput request, Guid id)
+        {
+            var response = await _serviceBook.UpdateBook(request, id);
+            return StatusCode((int)response.Code, response);
+        }
+
+
         [HttpGet("{userEmail}")]
         public async Task<ActionResult<dynamic>> GetBooks(string userEmail)
         {

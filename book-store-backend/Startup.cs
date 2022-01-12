@@ -91,6 +91,7 @@ namespace book_store_backend
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IDbContext, PersistenceContext>();
 
+
             services.AddControllers(mvcOpts =>
             {
             });
@@ -129,7 +130,15 @@ namespace book_store_backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            #region global cors policy activate Authentication/Authorization
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
+    
+
+            #endregion
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
